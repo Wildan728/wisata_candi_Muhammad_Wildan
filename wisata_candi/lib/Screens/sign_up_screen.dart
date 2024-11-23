@@ -32,8 +32,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
     if (password.length < 8 ||
         !password.contains(RegExp(r'[A-Z]')) ||
         !password.contains(RegExp(r'[a-z]')) ||
-        !password.contains(RegExp(r'[8-9]')) ||
-        !password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {}
+        !password.contains(RegExp(r'[0-9]')) ||
+        !password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
+        setState(() {
+          _errorText = 'Minimal 8 karakter, kombinasi [A-Z], [a-z], [0-9], [!@#\\\$%^&*(),.?":{}|<>]';
+        });}
     print('*** Sign up berhasil!');
     print('Nama: $name');
     print('Nama Pengguna: $username');
@@ -104,7 +107,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     // TODO: 7. Pasang ElevatedButton Sign In
                     SizedBox(height: 20),
                     ElevatedButton(
-                        onPressed: (){},
+                        onPressed: (){
+                          _signUp();
+                          },
                         child: Text("Sign Up")),
                     // TODO: 8. Pasang TextButton Sign Up
                     SizedBox(height: 10),
