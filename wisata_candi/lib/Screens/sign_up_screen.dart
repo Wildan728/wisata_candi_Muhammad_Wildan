@@ -22,6 +22,31 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   bool _obscurePassword = true;
 
+  // TODO: 1. Membuat fungsi _signup
+
+  void _signUp() {
+    String name = _namaController.text.trim();
+    String username = _usernameController.text.trim();
+    String password = _passwordController.text.trim();
+
+    if (password.length < 8 ||
+        !password.contains(RegExp(r'[A-Z]')) ||
+        !password.contains(RegExp(r'[a-z]')) ||
+        !password.contains(RegExp(r'[8-9]')) ||
+        !password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {}
+    print('*** Sign up berhasil!');
+    print('Nama: $name');
+    print('Nama Pengguna: $username');
+    print('Password: $password');
+  }
+
+  // TODO: 2. Membuat fungsi dispose
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
 
