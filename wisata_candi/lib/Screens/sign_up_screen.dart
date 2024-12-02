@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:encrypt/encrypt.dart' as encrypt;
+
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -24,7 +27,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   // TODO: 1. Membuat fungsi _signup
 
-  void _signUp() {
+  void _signUp() async{
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     String name = _namaController.text.trim();
     String username = _usernameController.text.trim();
     String password = _passwordController.text.trim();
@@ -36,7 +40,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
         !password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
         setState(() {
           _errorText = 'Minimal 8 karakter, kombinasi [A-Z], [a-z], [0-9], [!@#\\\$%^&*(),.?":{}|<>]';
-        });}
+        });
+        return;
+    }
+
+    if(name.isNotEmpty && username.isNotEmpty && password.isNotEmpty) {
+      final encrypt.Key key = encrypt.Key.fromLength(32);
+      final iv = encrypt.IV.fromLength(16);
+
+      final encrypter = encrypt.Encrypter(encrypt.AES(key));
+      final encryptedName = encrypter.encrypt(name, iv: iv);
+      final encryptedUsername = encrypter.encrypt(username, iv: iv);
+
+      // simpan data pengguna di sharedpreferences
+      prefs.setString('fullname', encryptedUsername.base64);
+      prefs.setString('username', encryptedUsername.base64);
+      prefs.setString('password', encryptedUsername.base64);
+      prefs.setString('key', key.base64);
+      prefs.setString('iv', iv.base64);
+    }
+
     print('*** Sign up berhasil!');
     print('Nama: $name');
     print('Nama Pengguna: $username');
